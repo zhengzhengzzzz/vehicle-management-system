@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kjxy.mapper.RoleMapper">
+    <select id="findRoleById" parameterType="Integer" resultType="RoleEntity">
+        SELECT * FROM role WHERE id = #{id}
+    </select>
+
+    <insert id="addRole" parameterType="cn.kjxy.entity.RoleEntity">
+        INSERT INTO role (name) VALUES (#{name})
+    </insert>
+
+    <delete id="deleteRole" parameterType="Integer">
+        DELETE FROM role WHERE id = #{id}
+    </delete>
+
+    <update id="updateRole" parameterType="cn.kjxy.entity.RoleEntity">
+        UPDATE role SET name = #{name} WHERE id = #{id}
+    </update>
+
+    <select id="getRoleList" resultType="RoleEntity">
+        SELECT * FROM role LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="getRoleCount" resultType="Integer">
+        select count(*) from role
+    </select>
+
+    <select id="findRoleByNameCount" resultType="Integer">
+        select count(*) from role where name like concat('%',#{name},'%')
+    </select>
+
+    <select id="findRoleByName" resultType="RoleEntity">
+        select * from role where name like concat('%',#{name},'%') limit #{offset}, #{pageSize}
+    </select>
+
+</mapper>

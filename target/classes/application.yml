@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/vehicle_manage?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+#关于mybatis的配置
+mybatis:
+  mapper-locations: classpath:/mappers/*.xml
+  type-aliases-package: cn.kjxy.entity
+  configuration:
+    auto-mapping-behavior: FULL #有嵌套结果后，默认的自动映射级别失效了。要修改为FULL

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kjxy.mapper.VehicleMapper">
+<!--    添加车辆-->
+    <insert id="addVehicle" parameterType="VehicleEntity">
+        insert into vehicle (id,model,brand,year,type,mileage,licensePlate,status,user_id)
+        values (#{id},#{model},#{brand},#{year},#{type},#{mileage},#{licensePlate},#{status},#{user_id})
+    </insert>
+<!--    删除车辆-->
+    <delete id="deleteVehicle" parameterType="VehicleEntity">
+        delete from vehicle where id = #{id}
+    </delete>
+<!--    修改车辆-->
+    <update id="updateVehicle" parameterType="VehicleEntity">
+        update vehicle set model=#{model},brand=#{brand},year=#{year},type=#{type},
+                           mileage=#{mileage},licensePlate=#{licensePlate},
+                           status=#{status}
+                           where id=#{id};
+    </update>
+<!--    分页查询-->
+    <select id="getVehicleList" parameterType="Integer" resultType="VehicleEntity">
+        select * from vehicle limit #{offset},#{pageSize}
+    </select>
+<!--    查询有多少条车辆记录-->
+    <select id="getVehicleCount" resultType="Integer">
+        select count(*) from vehicle
+    </select>
+<!--    根据id查询-->
+    <select id="getVehicleById" parameterType="Integer" resultType="VehicleEntity">
+        select * from vehicle where id = #{id}
+    </select>
+<!--    根据userId 分页查询-->
+    <select id="getVehiclesByUserId" parameterType="Integer" resultType="VehicleEntity">
+        select * from vehicle where user_id = #{id} limit #{offset},#{pageSize}
+    </select>
+<!--    根据用户id查找总共有多少条数据-->
+    <select id="getVehicleCountByUserId" resultType="Integer">
+        select count(*) from vehicle where user_id = #{id}
+    </select>
+
+    <select id="findAllVehiclesByParam" resultType="VehicleEntity">
+        select * from vehicle
+        <where>
+            <if test="vehicleEntity != null and vehicleEntity.model!=null and vehicleEntity.model!=''">
+                and model like concat('%',#{vehicleEntity.model},'%')
+            </if>
+            <if test="vehicleEntity != null and vehicleEntity.brand!=null and vehicleEntity.brand!=''">
+                and brand like concat('%',#{vehicleEntity.brand},'%')
+            </if>
+            <if test="vehicleEntity != null and vehicleEntity.year!=null and vehicleEntity.year!=''">
+                and year like concat('%',#{vehicleEntity.year},'%')
+            </if>
+            <if test="vehicleEntity != null and vehicleEntity.type!=null and vehicleEntity.type!=''">
+                and `type` = #{vehicleEntity.type}
+            </if>
+            <if test="vehicleEntity != null and vehicleEntity.mileage!=null and vehicleEntity.mileage!=''">
+                and mileage = #{vehicleEntity.mileage}
+            </if>
+            <if test="vehicleEntity != null and vehicleEntity.licensePlate!=null and vehicleEntity.licensePlate!=''">
+                and licensePlate like concat('%',#{vehicleEntity.licensePlate},'%')
+            </if>
+            <if test="vehicleEntity != null and vehicleEntity.status!=null and vehicleEntity.status!=''">
+                and status = #{vehicleEntity.status}
+            </if>
+        </where>
+        limit #{offset},#{pageSize}
+    </select>
+
+    <select id="findAllVehiclesByParamCount" resultType="Integer" parameterType="VehicleEntity">
+        select count(*) from vehicle
+        <where>
+            <if test="model!=null and model!=''">
+                and model like concat('%',#{model},'%')
+            </if>
+            <if test="brand!=null and brand!=''">
+                and brand like concat('%',#{brand},'%')
+            </if>
+            <if test="year!=null and year!=''">
+                and year like concat('%',#{year},'%')
+            </if>
+            <if test="type!=null and type!=''">
+                and `type` = #{type}
+            </if>
+            <if test="mileage!=null and mileage!=''">
+                and mileage = #{mileage}
+            </if>
+            <if test="licensePlate!=null and licensePlate!=''">
+                and licensePlate like concat('%',#{licensePlate},'%')
+            </if>
+            <if test="status!=null and status!=''">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="findAllVehiclesByParamAndUserId" resultType="VehicleEntity">
+        select * from vehicle
+        <where>
+            <if test="params != null and params.vehicleEntity != null">
+                <if test="params.vehicleEntity.model != null and params.vehicleEntity.model != ''">
+                    and model like concat('%', #{params.vehicleEntity.model}, '%')
+                </if>
+                <if test="params.vehicleEntity.brand != null and params.vehicleEntity.brand != ''">
+                    and brand like concat('%', #{params.vehicleEntity.brand}, '%')
+                </if>
+                <if test="params.vehicleEntity.year != null and params.vehicleEntity.year != ''">
+                    and year like concat('%', #{params.vehicleEntity.year}, '%')
+                </if>
+                <if test="params.vehicleEntity.type != null and params.vehicleEntity.type != ''">
+                    and `type` = #{params.vehicleEntity.type}
+                </if>
+                <if test="params.vehicleEntity.mileage != null and params.vehicleEntity.mileage != ''">
+                    and mileage = #{params.vehicleEntity.mileage}
+                </if>
+                <if test="params.vehicleEntity.licensePlate != null and params.vehicleEntity.licensePlate != ''">
+                    and licensePlate like concat('%', #{params.vehicleEntity.licensePlate}, '%')
+                </if>
+                <if test="params.vehicleEntity.status != null and params.vehicleEntity.status != ''">
+                    and status = #{params.vehicleEntity.status}
+                </if>
+            </if>
+            and user_id = #{id}
+        </where>
+        limit #{params.offset}, #{params.pageSize}
+    </select>
+
+    <select id="findAllVehiclesByParamAndUserIdCount" resultType="Integer">
+        select count(*) from vehicle
+        <where>
+            <if test="vehicleEntity.model != null and vehicleEntity.model != ''">
+                and model like concat('%', #{vehicleEntity.model}, '%')
+            </if>
+            <if test="vehicleEntity.brand != null and vehicleEntity.brand != ''">
+                and brand like concat('%', #{vehicleEntity.brand}, '%')
+            </if>
+            <if test="vehicleEntity.year != null and vehicleEntity.year != ''">
+                and year like concat('%', #{vehicleEntity.year}, '%')
+            </if>
+            <if test="vehicleEntity.type != null and vehicleEntity.type != ''">
+                and `type` = #{vehicleEntity.type}
+            </if>
+            <if test="vehicleEntity.mileage != null and vehicleEntity.mileage != ''">
+                and mileage = #{vehicleEntity.mileage}
+            </if>
+            <if test="vehicleEntity.licensePlate != null and vehicleEntity.licensePlate != ''">
+                and licensePlate like concat('%', #{vehicleEntity.licensePlate}, '%')
+            </if>
+            <if test="vehicleEntity.status != null and vehicleEntity.status != ''">
+                and status = #{vehicleEntity.status}
+            </if>
+            and user_id = #{id}
+        </where>
+    </select>
+
+</mapper>

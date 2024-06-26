@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kjxy.mapper.UserMapper">
+
+    <resultMap id="userMap" type="cn.kjxy.entity.UserEntity">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="create_time" column="create_time"/>
+        <result property="update_time" column="update_time"/>
+        <result property="deleted" column="deleted"/>
+        <result property="rid" column="rid"/>
+        <!-- 使用association来关联RoleEntity -->
+        <association property="role" javaType="cn.kjxy.entity.RoleEntity"
+                     column="rid" select="cn.kjxy.mapper.RoleMapper.findRoleById"/>
+    </resultMap>
+
+<!--    根据rid查找用户-->
+    <select id="findUserByRid" resultType="UserEntity">
+       select * from user where rid = #{rid}
+    </select>
+
+    <select id="findUserByName1" resultMap="userMap">
+        select * from user where username like concat('%', #{name}, '%')
+    </select>
+    <select id="findUserByName" resultMap="userMap">
+        select * from user where username = #{name}
+    </select>
+    <select id="findAllUsers" resultMap="userMap">
+        select * from user
+    </select>
+
+    <select id="findUserByNameCount" resultType="Integer">
+        select count(*) from user where username like concat('%', #{name}, '%')
+    </select>
+    <select id="findAllUsersCount" resultType="Integer">
+        select count(*) from user
+    </select>
+
+    <select id="findUserById" resultMap="userMap">
+        select * from user where id = #{id}
+    </select>
+
+    <delete id="deleteUser">
+        delete from user where id = #{id}
+    </delete>
+
+    <select id="getCommonUsers" parameterType="Integer" resultMap="userMap">
+        select * from user where rid = 1 limit #{offset},#{pageSize}
+    </select>
+
+    <select id="getAdminAndCommonUsers" parameterType="Integer" resultMap="userMap">
+        select * from user where rid = 1 or rid = 2 limit #{offset},#{pageSize}
+    </select>
+
+    <select id="getCommonUsersCount" resultType="Integer">
+        select count(*) from user where rid = 1
+    </select>
+
+    <select id="getAdminAndCommonUsersCount" resultType="Integer">
+        select count(*) from user where rid = 1 or rid = 2
+    </select>
+
+    <update id="updateUser" parameterType="UserEntity">
+        update user set username = #{username},create_time = #{create_time},update_time = #{update_time},deleted = #{deleted},password = #{password},rid = #{rid}
+        where id = #{id}
+    </update>
+
+    <insert id="saveUser" parameterType="UserEntity">
+        insert into user (id,username,password,create_time,update_time,deleted,rid) values (#{id},#{username},#{password},#{create_time},#{update_time},#{deleted},#{rid})
+    </insert>
+
+</mapper>
